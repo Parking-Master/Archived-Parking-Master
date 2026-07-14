@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script type="text/javascript" src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.1/build/css/alertify.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.1/build/css/themes/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.1/build/alertify.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/Parking-Master/Gametime.js@latest/Gametime.min.js"></script>
+    <title>Multiplayer - Parking Master</title>
+    <style>
+      body {
+        overflow: hidden;
+      }
+      .banner-blue {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 45px;
+        background: #0000FF;
+        z-index: 10;
+      }
+      .banner-red {
+        position: absolute;
+        left: 0;
+        top: 100%;
+        bottom: 0;
+        right: 0;
+        margin-top: -45px;
+        width: 100%;
+        height: 45px;
+        background: #FF0000;
+        z-index: 10;
+      }
+      canvas {
+        border: 2px solid #e9e9e9;
+        background: #FFF;
+        border-radius: 3px;
+        padding: 0;
+        margin: 20px;
+        position: relative;
+        margin-top: 20vh;
+      }
+      canvas[player="1"] {
+        position: relative;
+        border-color: #0000FF;
+        left: 50%;
+        margin-left: -620px;
+      }
+      canvas[player="2"] {
+        position: relative;
+        border-color: #FF0000;
+        left: 50%;
+      }
+      .btn.btn-main {
+        user-select: none !important;
+        cursor: pointer;
+        box-sizing: border-box;
+        margin: 20px;
+        padding: 0 10px 0 10px;
+        width: 132px;
+        height: 32px;
+        border: none;
+        border-radius: 10px;
+        background-color: #FFF;
+        background-image: linear-gradient(top, #58616f 0%, #363c45 40%, #2b2f36 80%, #3d434d 100%);
+        color: black;
+        text-align: center;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        font-size: 14px;
+        line-height: 44px;
+        margin-top: 8px;
+        display: inline-block;
+      }
+      .btn.btn-main:active {
+        position: relative;
+        top: 2.5px;
+      }
+      .btn.btn-main:disabled, .btn.btn-main[data-disabled] {
+        background-color: #f1f1f1;
+        pointer-events: none;
+      }
+      .btn.btn-main:disabled:hover, .btn.btn-main[data-disabled]:hover {
+        cursor: not-allowed;
+      }
+      .btn-red {
+        color: #FF0000;
+      }
+      .btn-blue {
+        color: #0000FF;
+      }
+      .alertify-notifier {
+        z-index: 100000;
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="banner-blue">
+      <div class="btn btn-main drive-btn -blue" data-disabled>Drive</div>
+      <div class="btn btn-main reverse-btn -blue" data-disabled>Reverse</div>
+    </div>
+    <div class="banner-red">
+      <div class="btn btn-main drive-btn -red" data-disabled>Drive</div>
+      <div class="btn btn-main reverse-btn -red" data-disabled>Reverse</div>
+    </div>
+    <section class="non-select" data-abilities="{}" data-unselectable>
+    <canvas player="1" width="600" height="350"></canvas>
+    <canvas player="2" width="600" height="350"></canvas>
+    </section>
+    <script>
+      var CurrentUserID = [];
+      gametime.onconnect = function() {
+        setInterval(function() {
+          if (!team) {
+            return;
+          }
+          if (team == "red") {
+            for (let i = 0; i < document.querySelectorAll(".-red").length; i++) {
+              document.querySelectorAll(".-red")[i].removeAttribute("data-disabled");
+              document.querySelectorAll(".-blue")[i].setAttribute("data-disabled", true);
+            }
+          } else if (team == "blue") {
+            for (let i = 0; i < document.querySelectorAll(".-blue").length; i++) {
+              document.querySelectorAll(".-blue")[i].removeAttribute("data-disabled");
+              document.querySelectorAll(".-red")[i].setAttribute("data-disabled", true);
+            }
+          }
+        }, 100);
+      };
+      (function() {
+        const d = (t) => {
+          t == 1 ? gametime.run("car1DriveForward") : (t == 2 ? gametime.run("car2DriveForward") : void(0));
+        };
+        const y = (t) => {
+          t == 1 ? gametime.run("car1DriveBackward") : (t == 2 ? gametime.run("car2DriveBackward") : void(0));
+        };
+        document.addEventListener("mousedown", function(e) {
+          if (e.target == document.querySelectorAll(".btn.btn-main.drive-btn.-blue")[0]) {
+            return d(1);
+          } else if (e.target == document.querySelectorAll(".btn.btn-main.drive-btn.-red")[0]) {
+            return d(2);
+          } else if (e.target == document.querySelectorAll(".btn.btn-main.reverse-btn.-blue")[0]) {
+            return y(1);
+          } else if (e.target == document.querySelectorAll(".btn.btn-main.reverse-btn.-red")[0]) {
+            return y(2);
+          }
+        });
+        (function() {
+          const d = (t) => {
+            t == 1 ? gametime.run("car1StopForward") : (t == 2 ? gametime.run("car2StopForward") : void(0));
+          };
+          const y = (t) => {
+            t == 1 ? gametime.run("car1StopBackward") : (t == 2 ? gametime.run("car2StopBackward") : void(0));
+          };
+          document.addEventListener("mouseup", function(e) {
+            if (e.target == document.querySelectorAll(".btn.btn-main.-blue")[0]) {
+              return d(1);
+            } else if (e.target == document.querySelectorAll(".btn.btn-main.-red")[0]) {
+              return d(2);
+            } else if (e.target == document.querySelectorAll(".btn.btn-main.reverse-btn.-blue")[0]) {
+              return y(1);
+            } else if (e.target == document.querySelectorAll(".btn.btn-main.reverse-btn.-red")[0]) {
+              return y(2);
+            }
+          });
+          document.addEventListener("mouseout", function(e) {
+            if (e.target == document.querySelectorAll(".btn.btn-main.-blue")[0]) {
+              return d(1);
+            } else if (e.target == document.querySelectorAll(".btn.btn-main.-red")[0]) {
+              return d(2);
+            } else if (e.target == document.querySelectorAll(".btn.btn-main.reverse-btn.-blue")[0]) {
+              return y(1);
+            } else if (e.target == document.querySelectorAll(".btn.btn-main.reverse-btn.-red")[0]) {
+              return y(2);
+            }
+          });
+        })();
+      })();
+      if (!(new URLSearchParams(location.search).get("channel"))) {
+        location.search = "channel=all";
+      }
+      const channel = (new URLSearchParams(location.search).get("channel")).toString();
+
+      gametime.set("key", "pub-c-c44c8fc4-612e-4fc3-b875-4398f01da63c", "sub-c-b6832794-3c08-11ec-b2c1-a25c7fcd9558");
+      gametime.set("channel", channel);
+
+      gametime.make("car1DriveForward");
+      gametime.make("car1DriveBackward");
+      gametime.make("car1DriveLeft");
+      gametime.make("car1DriveRight");
+
+      gametime.make("car2DriveForward");
+      gametime.make("car2DriveBackward");
+      gametime.make("car2DriveLeft");
+      gametime.make("car2DriveRight");
+
+      gametime.make("car1StopForward");
+      gametime.make("car1StopBackward");
+      gametime.make("car1StopLeft");
+      gametime.make("car1StopRight");
+
+      gametime.make("car2StopForward");
+      gametime.make("car2StopBackward");
+      gametime.make("car2StopLeft");
+      gametime.make("car2StopRight");
+
+      gametime.make("postID");
+      gametime.make("checkUserID");
+      gametime.make("isGuest");
+      gametime.make("leftGame");
+
+      let car1 = {};
+      let car2 = {};
+
+      car1.x = 10, car1.y = 10, car1.canvas = document.querySelector("canvas[player=\"1\"]"), car1.context = car1.canvas.getContext("2d");
+      car2.x = 10, car2.y = 10, car2.canvas = document.querySelector("canvas[player=\"2\"]"), car2.context = car2.canvas.getContext("2d");
+
+      const carWidth = 50, carHeight = 100;
+
+      car1.driveForward = function() {
+        car1.context.fillStyle = "#0000FF";
+        car1.context.clearRect(0, 0, car1.canvas.width, car1.canvas.height)
+        car1.context.fillRect(car1.x, car1.y, carWidth, carHeight);
+        car1.y += 3;
+        car1.animateA = requestAnimationFrame(car1.driveForward);
+      }
+      car1.driveBackward = function() {
+        car1.context.fillStyle = "#0000FF";
+        car1.context.clearRect(0, 0, car1.canvas.width, car1.canvas.height)
+        car1.context.fillRect(car1.x, car1.y, carWidth, carHeight);
+        car1.y -= 2.5;
+        car1.animateB = requestAnimationFrame(car1.driveBackward);
+      }
+      car1.driveLeft = function() {
+        car1.context.fillStyle = "#0000FF";
+        car1.context.clearRect(0, 0, car1.canvas.width, car1.canvas.height)
+        car1.context.fillRect(car1.x, car1.y, carWidth, carHeight);
+        car1.x -= 2;
+        car1.animateC = requestAnimationFrame(car1.driveLeft);
+      }
+      car1.driveRight = function() {
+        car1.context.fillStyle = "#0000FF";
+        car1.context.clearRect(0, 0, car1.canvas.width, car1.canvas.height)
+        car1.context.fillRect(car1.x, car1.y, carWidth, carHeight);
+        car1.x += 2;
+        car1.animateD = requestAnimationFrame(car1.driveRight);
+      }
+
+      car2.driveForward = function() {
+        car2.context.fillStyle = "#FF0000";
+        car2.context.clearRect(0, 0, car2.canvas.width, car2.canvas.height)
+        car2.context.fillRect(car2.x, car2.y, carWidth, carHeight);
+        car2.y += 3;
+        car2.animateA = requestAnimationFrame(car2.driveForward);
+      }
+      car2.driveBackward = function() {
+        car2.context.fillStyle = "#FF0000";
+        car2.context.clearRect(0, 0, car2.canvas.width, car2.canvas.height)
+        car2.context.fillRect(car2.x, car2.y, carWidth, carHeight);
+        car2.y -= 2.5;
+        car2.animateB = requestAnimationFrame(car2.driveBackward);
+      }
+      car2.driveLeft = function() {
+        car2.context.fillStyle = "#FF0000";
+        car2.context.clearRect(0, 0, car2.canvas.width, car2.canvas.height)
+        car2.context.fillRect(car2.x, car2.y, carWidth, carHeight);
+        car2.x -= 2;
+        car2.animateC = requestAnimationFrame(car2.driveLeft);
+      }
+      car2.driveRight = function() {
+        car2.context.fillStyle = "#FF0000";
+        car2.context.clearRect(0, 0, car2.canvas.width, car2.canvas.height)
+        car2.context.fillRect(car2.x, car2.y, carWidth, carHeight);
+        car2.x += 2;
+        car2.animateD = requestAnimationFrame(car2.driveRight);
+      }
+
+      car1.stopForward = function() {
+        cancelAnimationFrame(car1.animateA);
+      }
+      car1.stopBackward = function() {
+        cancelAnimationFrame(car1.animateB);
+      }
+      car1.stopLeft = function() {
+        cancelAnimationFrame(car1.animateC);
+      }
+      car1.stopRight = function() {
+        cancelAnimationFrame(car1.animateD);
+      }
+      
+      car2.stopForward = function() {
+        cancelAnimationFrame(car2.animateA);
+      }
+      car2.stopBackward = function() {
+        cancelAnimationFrame(car2.animateB);
+      }
+      car2.stopLeft = function() {
+        cancelAnimationFrame(car2.animateC);
+      }
+      car2.stopRight = function() {
+        cancelAnimationFrame(car2.animateD);
+      }
+
+      function postUserID(id) {
+        CurrentUserID.unshift(id.toString());
+      }
+
+      function left_game() {
+        window.onbeforeunload = null;
+        swal({
+          icon: "info",
+          title: "Player left",
+          text: "One or more players have left the game. You will return to the main menu.",
+          button: "Close"
+        }).then(() => {
+          cancelSearch();
+        });
+      }
+
+      gametime.on("car1DriveForward", car1.driveForward);
+      gametime.on("car1DriveBackward", car1.driveBackward);
+      gametime.on("car1DriveLeft", car1.driveLeft);
+      gametime.on("car1DriveRight", car1.driveRight);
+
+      gametime.on("car2DriveForward", car2.driveForward);
+      gametime.on("car2DriveBackward", car2.driveBackward);
+      gametime.on("car2DriveLeft", car2.driveLeft);
+      gametime.on("car2DriveRight", car2.driveRight);
+
+      gametime.on("car1StopForward", car1.stopForward);
+      gametime.on("car1StopBackward", car1.stopBackward);
+      gametime.on("car1StopLeft", car1.stopLeft);
+      gametime.on("car1StopRight", car1.stopRight);
+
+      gametime.on("car2StopForward", car2.stopForward);
+      gametime.on("car2StopBackward", car2.stopBackward);
+      gametime.on("car2StopLeft", car2.stopLeft);
+      gametime.on("car2StopRight", car2.stopRight);
+
+      gametime.on("postID", postUserID);
+      gametime.on("leftGame", left_game);
+
+      function startGame() {
+        swal({
+          icon: "",
+          title: "Starting...",
+          text: "Starting in 10 seconds.\nNote: You are ...",
+          buttons: false,
+          closeOnClickOutside: false,
+          closeOnEsc: false
+        });
+        setInterval(function() {
+          if (!team) {
+            return;
+          }
+          document.querySelector(".swal-text").innerHTML = document.querySelector(".swal-text").innerHTML.replace(/\.\.\./g, "<b>" + team + "</b>");
+        }, 1000);
+
+        setTimeout(() => {
+          swal.close();
+          window.addEventListener("beforeunload", leftGame);
+          window.addEventListener("unload", leftGame);
+          window.addEventListener("pagehide", leftGame);
+          window.addEventListener("visibilitychange", leftGame);
+          window.addEventListener("offline", leftGame);
+        }, 10000);
+      }
+      function cancelSearch() {
+        startGame = null;
+        location.replace("/");
+      }
+      function getLink() {
+        navigator.clipboard.writeText(location.protocol + "//" + location.host + location.pathname + "?channel=" + channel + "&join=1");
+        alertify.message("Copied to clipboard!");
+      }
+
+      let startGameState = setInterval(async function() {
+        if (CurrentUserID.length >= 2) {
+          clearInterval(startGameState);
+          startGame();
+        };
+      }, 100);
+      window.onload = function() {
+        const cancelBtn = document.createElement("div");
+        cancelBtn.innerHTML = "<a href=\"#\" onclick=\"event.preventDefault(); getLink();\">Link</a> <a href=\"#\" onclick=\"event.preventDefault(); cancelSearch();\">Cancel</a>";
+        swal({
+          icon: "",
+          title: "Please wait...",
+          text: "Searching for players.",
+          content: cancelBtn,
+          buttons: false,
+          closeOnClickOutside: false,
+          closeOnEsc: false
+        });
+        setTimeout(() => gametime.run("postID", [gametime.user.id]), 2500);
+        setInterval(() => {
+          setTimeout(function() {
+            if (CurrentUserID[0] == gametime.user.id) {
+              isGuest = true;
+              isHost = false;
+              team = "red";
+            } else if (CurrentUserID[1] == gametime.user.id) {
+              isHost = true;
+              isGuest = false;
+              team = "blue";
+            }
+          }, 800);
+        }, 4000);
+      }
+      window.onbeforeunload = (event) => {
+        return event.preventDefault();
+      };
+      window.addEventListener("load", function() {
+        car1.context.fillStyle = "#0000FF";
+        car1.context.fillRect(car1.x, car1.y, carWidth, carHeight);
+        car2.context.fillStyle = "#FF0000";
+        car2.context.fillRect(car2.x, car2.y, carWidth, carHeight);
+      });
+
+      setInterval(() => {
+        function removeDuplicate(arr) {
+          var tmp = [];
+          for (var i = 0; i < arr.length; i++){
+            if (tmp.indexOf(arr[i]) == -1) {
+              tmp.push(arr[i]);
+            }
+          }
+          return tmp;
+        }
+        CurrentUserID = removeDuplicate(CurrentUserID);
+      }, 100);
+
+      let checkIfUserJoined = setInterval(() => {
+        if (CurrentUserID.length >= 2) {
+          clearInterval(checkIfUserJoined);
+          gametime.run("postID", [gametime.user.id])
+        }
+      }, 1500);
+
+      function leftGame() {
+        gametime.run("leftGame");
+      }
+    </script>
+  </body>
+</html>

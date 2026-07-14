@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Profile - Parking Master</title>
+        <meta name="content-type" content="text/html,charset=utf-8;">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" />
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/Parking-Master/Parking-Master/signup-styles.css" />
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/Parking-Master/Simple-Alert@latest/simplealert.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.1/build/css/alertify.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.1/build/css/themes/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.1/build/alertify.min.js"></script>
+        <style>
+        .col-xl-8.order-xl-1 {
+          transform: scale(120%) !important;
+          position: absolute;
+          margin-top: 30px !important;
+          left: 14vw;
+        }
+        body, html {
+          overflow-y: scroll !important;
+        }
+        ::spelling-error  {
+          text-decoration: wavy #999;
+        }
+        ::selection {
+          background-color: #e2e2e2;
+          opacity: 0;
+        }
+        </style>
+    </head>
+<body style="display:none">
+    <div class="container-fluid mt--7">
+      <div class="row">
+        <div class="col-xl-8 order-xl-1">
+          <div class="card bg-secondary shadow">
+            <div class="card-header bg-white border-0">
+              <div class="row align-items-center">
+                <div class="col-8">
+                  <h3 class="mb-0">My Profile (<img id="user-picture" src="" alt="" style="width:25px !important;">)</h3>
+                </div>
+                <div class="col-4 text-right">
+                  <a href="/account.html" class="btn btn-sm btn-primary">Settings</a>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <form>
+                <h6 class="heading-small text-muted mb-4">User information</h6>
+                <div class="pl-lg-4">
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <div class="form-group focused">
+                        <label class="form-control-label" for="input-username">Username</label>
+                        <input name="username" type="text" id="input-username" class="form-control form-control-alternative" onfocus="this.setSelectionRange(0, this.value.length)">
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="form-group">
+                        <label class="form-control-label" for="input-email">Email address <a href="#" class="email-hidden-msg"></a></label>
+                        <input type="email" id="input-email" class="form-control form-control-alternative" readonly="" style="caret-color:transparent;outline:none !important;box-shadow:none !important;">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr class="my-4">
+                <h3 class="heading-large text-muted mb-4">About me</h3>
+                  <div class="pl-lg-4">
+                  <div class="form-group focused">
+                    <label id="st-label">My status</label><br>
+                    <h6 class="heading-small text-muted mb-3" style="padding:0;margin:0;">Tier: <span class="tier"></span></h6>
+                    <h6 class="heading-small text-muted mb-3" style="padding:0;margin:0;">Points: <span class="points"></span></h6>
+                  </div>
+                  </div>
+                  <div class="pl-lg-4">
+                  <div class="form-group focused">
+                    <label id="about-label">About Me</label>
+                    <textarea id="about-me" rows="4" class="form-control form-control-alternative" placeholder="Short paragraph about you" spellcheck="true"></textarea>
+                  </div>
+                </div>
+              </form>
+              <hr class="my-4">
+              <div class="pl-lg-4">
+              <div class="form-group focused">
+                <label id="st-label">Options</label><br>
+                  <div class="modified">
+                    <a href="#" class="btn btn-sm btn-delete btn-primary" style="transform:scale(0.9);background-color:#FF0000!important;text-align:center;padding-top:2px;padding-bottom:-2px;"><svg style="padding:0;margin:0;position:relative;float:left;transform:scale(0.8);fill:white;" width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M9 3h6v-1.75c0-.066-.026-.13-.073-.177-.047-.047-.111-.073-.177-.073h-5.5c-.066 0-.13.026-.177.073-.047.047-.073.111-.073.177v1.75zm11 1h-16v18c0 .552.448 1 1 1h14c.552 0 1-.448 1-1v-18zm-10 3.5c0-.276-.224-.5-.5-.5s-.5.224-.5.5v12c0 .276.224.5.5.5s.5-.224.5-.5v-12zm5 0c0-.276-.224-.5-.5-.5s-.5.224-.5.5v12c0 .276.224.5.5.5s.5-.224.5-.5v-12zm8-4.5v1h-2v18c0 1.105-.895 2-2 2h-14c-1.105 0-2-.895-2-2v-18h-2v-1h7v-2c0-.552.448-1 1-1h6c.552 0 1 .448 1 1v2h7z"/></svg> <span style="margin-top:2px;margin-bottom:-2px;margin:2px;font-size: 17px;">Delete Account</span></a>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="footer">
+    <div class="row align-items-center justify-content-xl-between">
+      <div class="col-xl-6 m-auto text-center">
+        <div class="copyright">
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script>
+  function getCookie(cname) {
+    let name = cname + "=";
+    let ca = document.cookie.split(";");
+    for(let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == " ") {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+  const ngrl = "https://parkingmaster.loca.lt";
+  const user = {
+    get: function(variable) {
+      if (variable != "picture") {
+        return getCookie("user-" + variable);
+      }
+      return localStorage["user-picture"];
+    }
+  };
+  let userEmail = decryptMultiplyer(user.get("email"), 5);
+  let userPasswd = decryptMultiplyer(user.get("pass"), 5);
+  let userName = decryptMultiplyer(user.get("name"), 5);
+  function encryptMultiplyer(text, layers) {
+    if (layers > 10) {
+      throw new ReferenceError("Cannot encrypt string with more than 10 layers");
+    }
+    let resultText = text;
+    for (let i = 0; i < layers; i++) {
+      if (resultText.length > 400) return console.warn("Warning: Encrypting a string too high can deny system processes, and overwhelm your browser/PC. If you wish to continue and ignore this warning, please change the overEncryptStrings variable to true.")
+      resultText = btoa(resultText).replace(/(\=)/gi, "");
+    }
+    return resultText;
+  }
+  function decryptMultiplyer(text, layers) {
+    if (layers > 10) {
+      throw new ReferenceError("Cannot decrypt string with more than 10 layers");
+    }
+    let resultText = text;
+    for (let i = 0; i < layers; i++) {
+      if (!atob(resultText)) {
+        throw new ReferenceError("Failed to decrypt string on layer " + (10 -i) + " (OverDecrypt Failure)");
+      }
+      resultText = atob(resultText);
+    }
+    return resultText;
+  }
+  (function() {
+    if (localStorage["account-deletion"] && localStorage["account-deletion-time"]) {
+      document.querySelector(".btn-delete").style.pointerEvents = "none";
+    }
+    let checkAccount = setInterval(function() {
+      if (localStorage["account-deletion"] && localStorage["account-deletion-time"] && (Date.now() >= parseFloat(localStorage["account-deletion-time"], 0) + 60000)) {
+        clearInterval(checkAccount);
+        fetch(ngrl + "/user/delete", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            user: {
+              email: btoa(getCookie("user-email")),
+              password: btoa(getCookie("user-pass"))
+            },
+            confirmation: true,
+            encryption: true,
+            ttl: 145,
+            sessionKey: localStorage["session-key"]
+          })
+        }).then(data => {
+          if (data.status != 404) {
+            localStorage.clear(), sessionStorage.clear(), (function() {
+              var cookies = document.cookie.split(";");
+              for (var i = 0; i < cookies.length; i++) {
+                  var cookie = cookies[i];
+                  var eqPos = cookie.indexOf("=");
+                  var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                  document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+              }
+            })(), location.replace("/");
+          }
+        });
+      }
+    }, 1000);
+    document.addEventListener("keydown", function(e) {
+      if (e.ctrlKey && e.key == "F1") {
+        if (localStorage["account-deletion"]) {
+          simple.confirm("Cancel account deletion?", () => {
+            localStorage.removeItem("account-deletion"), localStorage.removeItem("account-deletion-time"), location.reload();
+          });
+        }
+      }
+    })
+    function getCookie(cname) {
+      let name = cname + "=";
+      let ca = document.cookie.split(";");
+      for(let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == " ") {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+    const i = 0;
+    const next = function() {
+      alertify.error("Your account will be deleted in 1 minute (Ctrl + F1 to cancel).");
+      localStorage.setItem("account-deletion", true);
+      localStorage.setItem("account-deletion-time", Date.now());
+    };
+    const o = function() {
+      simple.confirm("Are you sure? This action cannot be undone.", () => {
+        function redoThis(t = undefined) {
+          simple.prompt("Please type your current username to confirm:", "", (val) => {
+            if (val === getCookie("user-name")) {
+              next();
+            } else {
+              return swal.close();
+            }
+          });
+        }
+        redoThis(this);
+      });
+    };
+    document.querySelector(".btn-delete").addEventListener("click", function(e) {
+      e.preventDefault();
+      return o(i);
+    });
+    (async () => {
+      const i = 0;
+      const o = function() {
+        document.querySelector(".modified").classList.toggle("modified-integer");
+      };
+      document.addEventListener("mousemove", function(e) {
+        return o(i);
+      });
+    })();
+  })();
+  for (var i = 0; i < document.querySelectorAll('input:not([readonly])').length; i++) {
+    document.querySelector('input[name="username"]').onkeyup = function(e) {
+      function replaceInvalidCharacter(oldstr, newstr) {
+        return oldstr.replace(/[ "'\\\[\]\(\).\{\}\$\%\^\&\*\+\=\#\@\!`\~\|\/\/\:;\?\|]/g, newstr);
+      }
+      String.prototype.replaceInvalidCharacter = function(oldstr, newstr) {
+        return replaceInvalidCharacter(this.toString(), newstr);
+      };
+      document.querySelector('input[name="username"]').value = replaceInvalidCharacter(document.querySelector('input[name="username"]').value, '-');
+      if (e.key == 'Enter') {
+          let username = (document.querySelector('input[name="username"]').value).length > 14 ? `${replaceInvalidCharacter(document.querySelector('input[name="username"]').value.substr(0, 13), '-')}...` : replaceInvalidCharacter(document.querySelector('input[name="username"]').value, '-');
+          simple.confirm('Do you want to save your username as "' + (username) + '"?', () => {
+            function getCookie(cname) {
+              let name = cname + "=";
+              let ca = document.cookie.split(";");
+              for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == " ") {
+                  c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                  return c.substring(name.length, c.length);
+                }
+              }
+              return "";
+            }
+            if ((/^[a-zA-Z0-9-]*$/).test(username) && (username).length >= 8) {
+              function replaceCookie(cname, value) {
+                if (getCookie(cname)) {
+                  document.cookie = `${cname}=${value}`;
+                } else {
+                  return;
+                }
+              }
+              fetch(ngrl + "/user-options/change-username", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  email: userEmail,
+                  password: userPasswd,
+                  username: username
+                })
+              }).then(data => {
+                if (data.status == 200) {
+                  replaceCookie("user-name", encryptMultiplyer(username, 5));
+                  localStorage.setItem("user-picture", (localStorage["user-picture"].split("/").splice(0, 4).join("/") + "/") + username);
+                  location.reload();
+                }
+              });
+            } else {
+              simple.alert('Error: Invalid username.', () => {});
+            }
+          });
+      }
+    }
+  }
+  focused = false;
+  document.getElementById('about-me').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      document.querySelector('#about-label').innerText = 'Saved!';
+      document.querySelector('#about-label').innerText = 'About Me';
+      document.querySelector('textarea').style.cursor = 'wait';
+      var ms = Date.now();
+      ms = Date.now() - ms;
+      setTimeout(function() {
+        document.querySelector('textarea').style.cursor = 'text';
+      }, 1000);
+    }
+  });
+  setInterval(function() {
+    document.getElementById('about-me').onfocus = () => { focused = true };
+    document.getElementById('about-me').onblur = () => { focused = false };
+    document.getElementById('about-me').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.querySelector('#about-label').innerText = 'Saved!';
+        document.querySelector('#about-label').innerText = 'About Me';
+        document.querySelector('textarea').style.cursor = 'wait';
+        var ms = Date.now();
+        ms = Date.now() - ms;
+        setTimeout(function(){
+          document.querySelector('textarea').style.cursor = 'text';
+        }, 1000);
+      }
+    });
+    setTimeout(function(){
+      elClone = document.getElementById('about-me').cloneNode(true);
+      document.getElementById('about-me').parentNode.replaceChild(elClone, document.getElementById('about-me'));
+      if (focused) {
+        setTimeout(function() {
+            document.getElementById("about-me").focus();
+        }, 0);
+      }
+    }, 500);
+  }, 2500);
+  document.getElementById('input-email').value = decryptMultiplyer(user.get('email'), 5);
+  function _get(url, method, callback, params = null) {
+    var obj;
+    try {   
+     obj = new XMLHttpRequest();  
+    } catch(e){   
+      try {
+        obj = new ActiveXObject("Msxml2.XMLHTTP");
+      } catch(e) {
+        try {
+          obj = new ActiveXObject("Microsoft.XMLHTTP");
+        } catch(e) {
+          return false;
+        }
+      }
+    }
+    obj.onreadystatechange = function() {
+      if (obj.readyState == 4) {
+         callback(obj);
+      }
+    }
+    obj.open(method, url, true);
+    obj.send(params);
+    return obj;
+  }
+  (function() {
+    const setEmail = function(to) {
+      if (to == "hidden") {
+        fetch(ngrl + "/user/modify/post", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            user: {
+              email: getCookie("user-email"),
+              password: getCookie("user-pass")
+            },
+            type: "email-hidden",
+            data: "hidden"
+          })
+        }).then(data => console.log(data));
+      } else if (to == "visible") {
+        fetch(ngrl + "/user/modify/post", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            user: {
+              email: getCookie("user-email"),
+              password: getCookie("user-pass")
+            },
+            type: "email-hidden",
+            data: "visible"
+          })
+        }).then(data => console.log(data));
+      }
+    }
+    setTimeout(() => _get((ngrl + "/user/get/" + btoa(userEmail).replace(/(\=)/gi, "") + "/email"), "get", data => {
+      const u = (r = undefined) => {
+        // Make email hidden here
+        setEmail("hidden");
+      };
+      if (data.responseText == "hidden") {
+        document.querySelector(".email-hidden-msg").innerHTML = '<svg style="fill:currentcolor;transform:scale(0.9);" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19.604 2.562l-3.346 3.137c-1.27-.428-2.686-.699-4.243-.699-7.569 0-12.015 6.551-12.015 6.551s1.928 2.951 5.146 5.138l-2.911 2.909 1.414 1.414 17.37-17.035-1.415-1.415zm-6.016 5.779c-3.288-1.453-6.681 1.908-5.265 5.206l-1.726 1.707c-1.814-1.16-3.225-2.65-4.06-3.66 1.493-1.648 4.817-4.594 9.478-4.594.927 0 1.796.119 2.61.315l-1.037 1.026zm-2.883 7.431l5.09-4.993c1.017 3.111-2.003 6.067-5.09 4.993zm13.295-4.221s-4.252 7.449-11.985 7.449c-1.379 0-2.662-.291-3.851-.737l1.614-1.583c.715.193 1.458.32 2.237.32 4.791 0 8.104-3.527 9.504-5.364-.729-.822-1.956-1.99-3.587-2.952l1.489-1.46c2.982 1.9 4.579 4.327 4.579 4.327z"/></svg> <sup><small>(Your email is currently hidden)</small></sup>';
+        document.querySelector(".email-hidden-msg").onclick = function() {
+          return e(this);
+        };
+        const e = (t = undefined) => {
+          // Make email visible here
+          setEmail("visible");
+          document.querySelector(".email-hidden-msg").innerHTML = '<svg style="fill:currentcolor;transform:scale(0.9);" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12.015 7c4.751 0 8.063 3.012 9.504 4.636-1.401 1.837-4.713 5.364-9.504 5.364-4.42 0-7.93-3.536-9.478-5.407 1.493-1.647 4.817-4.593 9.478-4.593zm0-2c-7.569 0-12.015 6.551-12.015 6.551s4.835 7.449 12.015 7.449c7.733 0 11.985-7.449 11.985-7.449s-4.291-6.551-11.985-6.551zm-.015 3c-2.209 0-4 1.792-4 4 0 2.209 1.791 4 4 4s4-1.791 4-4c0-2.208-1.791-4-4-4z"/></svg> <sup><small>(Your email is currently visible)</small></sup>';
+          document.querySelector(".email-hidden-msg").onclick = function() {
+            return u(this);
+          };
+          alertify.message("Your email is no longer hidden. (Undo Ctrl + Z)");
+          const i = (t) => {
+            // Make email hidden here
+            setEmail("hidden");
+            if (t.ctrlKey && t.key == "z") {
+              document.querySelector(".email-hidden-msg").onclick = function() {
+                return e(this);
+              };
+              document.querySelector(".email-hidden-msg").innerHTML = '<svg style="fill:currentcolor;transform:scale(0.9);" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19.604 2.562l-3.346 3.137c-1.27-.428-2.686-.699-4.243-.699-7.569 0-12.015 6.551-12.015 6.551s1.928 2.951 5.146 5.138l-2.911 2.909 1.414 1.414 17.37-17.035-1.415-1.415zm-6.016 5.779c-3.288-1.453-6.681 1.908-5.265 5.206l-1.726 1.707c-1.814-1.16-3.225-2.65-4.06-3.66 1.493-1.648 4.817-4.594 9.478-4.594.927 0 1.796.119 2.61.315l-1.037 1.026zm-2.883 7.431l5.09-4.993c1.017 3.111-2.003 6.067-5.09 4.993zm13.295-4.221s-4.252 7.449-11.985 7.449c-1.379 0-2.662-.291-3.851-.737l1.614-1.583c.715.193 1.458.32 2.237.32 4.791 0 8.104-3.527 9.504-5.364-.729-.822-1.956-1.99-3.587-2.952l1.489-1.46c2.982 1.9 4.579 4.327 4.579 4.327z"/></svg> <sup><small>(Your email is currently hidden)</small></sup>';
+            }
+          };
+          document.onkeydown = function(e) {
+            return i(e);
+          };
+          setTimeout(function() {
+            document.onkeydown = null;
+          }, 10000);
+        };
+      } else {
+        document.querySelector(".email-hidden-msg").innerHTML = '<svg style="fill:currentcolor;transform:scale(0.9);" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12.015 7c4.751 0 8.063 3.012 9.504 4.636-1.401 1.837-4.713 5.364-9.504 5.364-4.42 0-7.93-3.536-9.478-5.407 1.493-1.647 4.817-4.593 9.478-4.593zm0-2c-7.569 0-12.015 6.551-12.015 6.551s4.835 7.449 12.015 7.449c7.733 0 11.985-7.449 11.985-7.449s-4.291-6.551-11.985-6.551zm-.015 3c-2.209 0-4 1.792-4 4 0 2.209 1.791 4 4 4s4-1.791 4-4c0-2.208-1.791-4-4-4z"/></svg> <sup><small>(Your email is currently visible)</small></sup>';
+        document.querySelector(".email-hidden-msg").onclick = function() {
+          return u(this);
+        };
+      }
+    }), 1000);
+  })();
+  document.querySelector("#input-username").value = decryptMultiplyer(user.get("name"), 5);
+  document.querySelector("#user-picture").src = decryptMultiplyer(user.get("picture"), 6);
+  function tier() {
+    const pts = (parseFloat(user.get("points"), 0));
+    if (pts == 0) {
+      return "No class";
+    } else if (pts > 0 && pts <= 10) {
+      return "Rookie";
+    } else if (pts > 10 && pts <= 25) {
+      return "Pro";
+    } else if (pts > 25 && pts <= 50) {
+      return "Expert";
+    } else if (pts > 50 && pts < 100) {
+      return "Parking Master";
+    } else {
+      return "No class";
+    }
+  }
+  for (let i = 0; i < document.querySelectorAll(".tier").length; i++) {
+    document.querySelectorAll(".tier")[i].textContent = tier();
+  }
+  for (let i = 0; i < document.querySelectorAll(".points").length; i++) {
+    document.querySelectorAll(".points")[i].textContent = user.get("points");
+  }
+  </script>
+  <script>
+  (async function() {
+    if (user.get('email') == null && user.get('pass') == null) {
+      function makeHttpObject() {
+        try { return new XMLHttpRequest(); }
+        catch (error) {}
+        try { return new ActiveXObject("Msxml2.XMLHTTP");}
+        catch (error) {}
+        try { return new ActiveXObject("Microsoft.XMLHTTP");}
+        catch (error) {}
+        throw new Error("Could not create HTTP request object.");
+      }
+      var request = makeHttpObject();
+      request.open("GET", "404.html", true);
+      request.send(null);
+      request.onreadystatechange = function() {
+        if (request.readyState == 4)
+          document.documentElement.innerHTML = (request.responseText);
+      };
+    } else {
+      document.body.removeAttribute('style');
+    }
+    setInterval(() => {
+    if (user.get('email') == null && user.get('pass') == null) {
+      function makeHttpObject() {
+        try {return new XMLHttpRequest();}
+        catch (error) {}
+        try {return new ActiveXObject("Msxml2.XMLHTTP");}
+        catch (error) {}
+        try {return new ActiveXObject("Microsoft.XMLHTTP");}
+        catch (error) {}
+        throw new Error("Could not create HTTP request object.");
+      }
+      var request = makeHttpObject();
+      request.open("GET", "404.html", true);
+      request.send(null);
+      request.onreadystatechange = function() {
+        if (request.readyState == 4)
+          document.documentElement.innerHTML = (request.responseText);
+      };
+    } else {
+      document.body.removeAttribute('style');
+    }
+    }, 1000);
+  })();
+  </script>
+</body>
+</html>

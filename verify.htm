@@ -1,0 +1,38 @@
+<script src="/server/config.js"></script>
+Please wait... You are being redirected
+<script>
+  let serverURL;
+  setTimeout(async () => {
+    serverURL = "https://parkingmaster.loca.lt";
+  }, 150);
+  const email = atob(new URLSearchParams(location.search).get("n"));
+  const pass = atob(new URLSearchParams(location.search).get("v"));
+  const redirect = location.protocol + "//" + location.host + "/signup.html#verified-email";
+  setTimeout(function() {
+  function doThis() {
+    fetch(serverURL + "/signup/post", {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json'
+       },
+       body: JSON.stringify({
+         user: {
+           email: email,
+           password: pass
+         }
+       })
+    }).then(data => {
+      if (data.status == 403) {
+        return;
+      } else {
+        setTimeout(() => location.replace(redirect), 200);
+      }
+    });
+  }
+    if (typeof serverURL == "undefined") {
+      return setTimeout(doThis, 500);
+    } else {
+      return doThis();
+    }
+  }, 200);
+</script>

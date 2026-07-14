@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://unpkg.com/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.1/build/css/alertify.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.1/build/css/themes/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.1/build/alertify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/Parking-Master/Simple-Alert@latest/simplealert.js"></script>
+    <meta http-equiv="X-Frame-Options" content="deny">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <title>Signup for Parking Master</title>
+    <style>::selection{background-color:#333;color:#f9f9f9}input:-webkit-autofill{-webkit-box-shadow:0 0 0px 1000px #ddd inset}body{caret-color:#333;-webkit-tap-highlight-color:transparent;font-family:Arial,Helvetica,sans-serif}*{box-sizing:border-box}input[type=email],input[type=password]{width:100%;padding:15px;margin:5px 0 22px 0;display:inline-block;border:none;background:#f1f1f1}input[type=password]:focus,input[type=text]:focus{background-color:#ddd;outline:0}button{background-color:#333;color:#fff;padding:14px 20px;margin:8px 0;border:none;cursor:pointer;width:100%;opacity:.9;border-radius:2px}button:hover{opacity:1}.cancelbtn{padding:14px 20px;background-color:#f44336}.signupbtn{float:center;width:100%;position:relative;left:50%;margin-left:-50%}.container{padding:16px}.modal{display:block;position:fixed;z-index:1;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:transparent;padding-top:50px}.modal-content{background-color:#fefefe;margin:5% auto 15% auto;width:90%}hr{border:1px solid #f1f1f1;margin-bottom:25px}.clearfix::after{content:"";clear:both;display:table}@media screen and (max-width:300px){.signupbtn{width:100%}}</style>
+  </head>
+<body>
+<div class="modal">
+  <form class="modal-content" action="" onsubmit="event.preventDefault();">
+    <div class="container">
+    <h1 style="text-align:center;font-style:normal;font-family:'Verdana', Verdana, 'Lato', 'Roboto', 'Open sans', Arial, sans-serif;">Sign up</h1>
+      <div style="color:#333;text-align:center;"><a style="text-decoration:none;color:#333;border-bottom:0.006vw solid #333;" href="/help.html">Help</a>&nbsp;&nbsp;&bullet;&nbsp;&nbsp;<a style="text-decoration:none;color:#333;border-bottom:0.006vw solid #333;" href="/log-in.html">Login instead</a></div>
+    
+      <hr>
+      <label for="email"><b>Email</b></label>
+      <input autocorrect="off" spellcheck="false" autocomplete="off" id="email-val" type="email" placeholder="Enter Email" name="email" required style="outline:none!important;">
+      
+      <label for="psw"><b>Password</b></label>
+      <input autocorrect="off" spellcheck="false" autocomplete="off" id="pass-val" type="password" placeholder="Enter Password" name="psw" required>
+
+      <label for="psw-repeat"><b>Repeat Password</b></label>
+      <input autocorrect="off" spellcheck="false" autocomplete="off" type="password" placeholder="Repeat Password" id="psw-repeat" name="psw-repeat" required>
+      
+      <label>
+        <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+      </label>
+
+      <p>By creating an account you agree to our <a href="/terms-of-use.md" style="color:#333">Terms & Privacy</a>.</p>
+      <hr>
+      <div class="clearfix">
+        <button type="submit" class="signupbtn">Sign Up</button>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+let ngrl = "https://parkingmaster.loca.lt";
+function _get(url, method, callback, params = null) {
+  var obj;
+  try {   
+   obj = new XMLHttpRequest();  
+  } catch(e){   
+    try {
+      obj = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch(e) {
+      try {
+        obj = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch(e) {
+        return false;
+      }
+    }
+  }
+  obj.onreadystatechange = function() {
+    if (obj.readyState == 4) {
+       callback(obj);
+    }
+  }
+  obj.open(method, url, true);
+  obj.send(params);
+  return obj; 
+}
+if (new URLSearchParams(location.search).get("verify") && new URLSearchParams(location.search).get("token")) {
+  const email = atob(new URLSearchParams(location.search).get("token")).split(":").pop();
+  fetch(ngrl + "/signup/verify-token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      token: new URLSearchParams(location.search).get("token"),
+      email: email
+    })
+  }).then(function(response) {
+    if (response.status == 200) {
+      swal({
+        icon: "success",
+        title: "Success!",
+        text: "Your email is verified and your account is active.",
+        button: "Log in",
+        closeOnClickOutside: false,
+        closeOnEsc: false
+      }).then(function() {
+        location.replace("/log-in.html");
+      });
+      document.querySelector(".swal-button").style.backgroundColor = "#6cc22e";
+    } else {
+      simple.alert("Error: Signup verification failed. This link may be expired!");
+    }
+  });
+}
+function deleteAllCookies() {
+  let cookies = document.cookie.split(";");
+  for (let i = 0; i < cookies.length; i++) {
+    var cookie = cookies[i];
+    var eqPos = cookie.indexOf("=");
+    var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  }
+}
+if (location.hash == "#verified-email") {
+  swal({
+    icon: "success",
+    title: "Success!",
+    text: "Your email is verified and your account is active.",
+    button: "Log in",
+    closeOnClickOutside: false,
+    closeOnEsc: false
+  }).then(function() {
+    location.replace("/log-in.html");
+  });
+  document.querySelector(".swal-button").style.backgroundColor = "#6cc22e";
+}
+let submitBtn = document.querySelector(".signupbtn");
+let emailSent = false;
+submitBtn.addEventListener("click", function() {
+  if (document.querySelector("#psw-repeat").value !== document.querySelector("#pass-val").value) {
+    return simple.alert('Error: Passwords do not match.', () => {});
+  } else {
+    let email = document.querySelector("#email-val").value;
+    let password = document.querySelector("#pass-val").value;
+    function checkEmail(email) {
+      const n = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return n.test(email);
+    }
+    if (!emailSent) {
+      if (checkEmail(email) && password.length >= 8) {
+        _get(ngrl + "/signup/check-user?email=" + btoa(email), "get", (res) => {
+          if (res.responseText == "false") {
+            fetch(ngrl + "/signup", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                email: email,
+                password: password
+              })
+            }).then(function(response) {
+              if (response.status == 200) {
+                for (let i = 0; i < document.querySelectorAll("input").length; i++) {
+                  document.querySelectorAll('input')[i].blur();
+                }
+                simple.alert("Success! Check your email inbox.", () => {
+                  emailSent = true;
+                });
+              } else {
+                for (var i = 0; i < document.querySelectorAll('input').length; i++) {
+                  document.querySelectorAll('input')[i].blur();
+                }
+                simple.alert("Error: Signup failed. Our servers may be down, or you entered invalid information.", () => {});
+              }
+            });
+            return;
+          } else if (res.responseText == "true") {
+            simple.alert("Error: A user with that email already exists", () => {});
+          }
+        });
+      } else {
+        for (var i = 0; i < document.querySelectorAll('input').length; i++) {
+          document.querySelectorAll('input')[i].blur();
+        }
+        simple.alert("Error: Invalid email or password", () => {});
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

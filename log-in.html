@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://unpkg.com/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.1/build/css/alertify.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.1/build/css/themes/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.1/build/alertify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/Parking-Master/Simple-Alert@latest/simplealert.js"></script>
+    <meta http-equiv="X-Frame-Options" content="deny">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <title>Login to Parking Master</title>
+    <style>.alert{visibility:hidden;position:fixed;padding:20px;background-color:#f1f1f1;color:#111;width:250px;z-index:1000;margin-left: 12px;margin-top:-32px}.alert a{color:#444;text-decoration:none;border-bottom:1px solid currentcolor}.alert .closebtn{margin-left:15px;color:#111;fill:#111;font-weight:700;float:right;font-size:22px;line-height:20px;cursor:pointer;transition:.3s}.alert .closebtn:hover{color:#000}#rs-pc-l-1{color:#444;text-decoration:none;border-bottom:1px solid currentcolor}::selection{background-color:#333;color:#f9f9f9}input:-webkit-autofill{-webkit-box-shadow:0 0 0px 1000px #e9e9e9 inset}body{caret-color:#333;-webkit-tap-highlight-color:transparent;font-family:Arial,Helvetica,sans-serif}*{box-sizing:border-box}input[type=email],input[type=password]{width:100%;padding:15px;margin:5px 0 22px 0;display:inline-block;border:none;background:#f1f1f1}input[type=password]:focus,input[type=text]:focus{background-color:#ddd;outline:0}button{background-color:#333;color:#fff;padding:14px 20px;margin:8px 0;border:none;cursor:pointer;width:100%;opacity:.9;border-radius:2px}button:hover{opacity:1}.cancelbtn{padding:14px 20px;background-color:#f44336}.signupbtn{float:center;width:50%;position:relative;left:50%;margin-left:-25%}.container{padding:16px}.modal{display:block;position:fixed;z-index:1;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:transparent;padding-top:50px}.modal-content{background-color:#fefefe;margin:5% auto 15% auto;width:90%}hr{border:1px solid #f1f1f1;margin-bottom:25px}.clearfix::after{content:"";clear:both;display:table}@media screen and (max-width:300px){.signupbtn{width:100%}}</style>
+  </head>
+<body>
+<div class="modal">
+  <form class="modal-content" onsubmit="event.preventDefault();">
+    <div class="container">
+    <h1 style="text-align:center;font-style:normal;font-family:'Verdana', Verdana, 'Lato', 'Roboto', 'Open sans', Arial, sans-serif;">Log in</h1>
+      <div style="color:#333;text-align:center;"><a style="text-decoration:none;color:#333;border-bottom:0.006vw solid #333;" href="#" onclick="" id="reset_pass_link">Reset password</a>&nbsp;&nbsp;&bullet;&nbsp;&nbsp;<a style="text-decoration:none;color:#333;border-bottom:0.006vw solid #333;" href="/signup.html">Signup instead</a></div>
+    
+      <hr>
+      <label for="email"><b>Email</b></label>
+      <input id="email-val" type="email" placeholder="Enter Email" name="email" required>
+      
+      <label for="psw"><b>Password</b></label>
+      <input id="pass-val" type="password" placeholder="Enter Password" name="psw" required>
+
+      <label>
+        <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+      </label>
+
+      <hr>
+      <div class="clearfix">
+        <button type="submit" class="loginbtn">Log in</button>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+const ngrl = "https://parkingmaster.loca.lt";
+function setCookie(t, e, o) {
+  const n = new Date;
+  n.setTime(n.getTime()+24*o*60*60*1000);
+  let a = "expires=" + n.toUTCString();
+  document.cookie = t + "=" + e + ";" + a + ";path=/"
+}
+function encryptMultiplyer(text, layers) {
+  if (layers > 10) {
+    throw new ReferenceError("Cannot encrypt string with more than 10 layers");
+  }
+  let resultText = text;
+  for (let i = 0; i < layers; i++) {
+    if (resultText.length > 400) return console.warn("Warning: Encrypting a string too high can deny system processes, and overwhelm your browser/PC. If you wish to continue and ignore this warning, please change the overEncryptStrings variable to true.")
+    resultText = btoa(resultText).replace(/(\=)/gi, "");
+  }
+  return resultText;
+}
+function decryptMultiplyer(text, layers) {
+  if (layers > 10) {
+    throw new ReferenceError("Cannot decrypt string with more than 10 layers");
+  }
+  let resultText = text;
+  for (let i = 0; i < layers; i++) {
+    if (!atob(resultText)) {
+      throw new ReferenceError("Failed to decrypt string on layer " + (10 -i) + " (OverDecrypt Failure)");
+    }
+    resultText = atob(resultText);
+  }
+  return resultText;
+}
+function _get(url, method, callback, params = null) {
+  var obj;
+  try {   
+   obj = new XMLHttpRequest();  
+  } catch(e){   
+    try {
+      obj = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch(e) {
+      try {
+        obj = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch(e) {
+        return false;
+      }
+    }
+  }
+  obj.onreadystatechange = function() {
+    if (obj.readyState == 4) {
+       callback(obj);
+    }
+  }
+  obj.open(method, url, true);
+  obj.send(params);
+  return obj; 
+}
+document.querySelector("#reset_pass_link").addEventListener("click", function(e) {
+  e.preventDefault();
+  resetPasscode();
+})
+function setLoginInformation(email, password) {
+  alertify.message("Logging in...");
+  setCookie("user-email", encryptMultiplyer(email.toString(), 5), 30);
+  setCookie("user-pass", encryptMultiplyer(password.toString(), 5), 30);
+  _get(ngrl + "/user/get/" + btoa(email) + "/username", "get", (res) => {
+    setCookie("user-name", encryptMultiplyer(res.responseText, 5), 30);
+      _get(ngrl + "/user/get/" + btoa(email) + "/picture", "get", (res) => {
+        localStorage.setItem("user-picture", encryptMultiplyer(res.responseText, 5));
+        _get(ngrl + "/user/get/" + btoa(email) + "/points", "get", (res) => {
+          setCookie("user-points", res.responseText, 30);
+        });
+      });
+  });
+}
+function getUrlParam() {
+  return new URLSearchParams(location.search).get(String(arguments[0]));
+}
+if (new URLSearchParams(location.search).get("reset_pcode") && new URLSearchParams(location.search).get("token")) {
+  const token = new URLSearchParams(location.search).get("token");
+  const email = atob(token).split(":").pop();
+  fetch(ngrl + "/login/reset-pc/v", {
+    method: "POST",
+    headers: {
+      "Content-Type":"application/json"
+    },
+    body: JSON.stringify({
+      token: token,
+      email: email
+    })
+  }).then(response => {
+    if (response.status == 200) {
+      const username = email.split("@")[0];
+      simple.prompt("Welcome back " + username + "!\nEnter your new password:", "", (data) => {
+        if (data) {
+          fetch(ngrl + "/login/reset-pc/a", {
+            method: "POST",
+            headers: {
+              "Content-Type":"application/json"
+            },
+            body: JSON.stringify({
+              email: email,
+              password: data.toString(),
+              token: token
+            })
+          }).then(response => {
+            if (response.status == 200) {
+              simple.alert("Password successfully reset!", () => location.replace(location.href.split("?").shift()));
+            } else {
+              simple.alert("Error: A critical error occurred", () => {});
+            }
+          });
+        }
+      });
+    } else {
+      simple.alert("Link expired. Please try again", () => {});
+    }
+  })
+}
+function resetPasscode() {
+  simple.prompt("Enter your account email address:", "", (email) => {
+    fetch(ngrl + "/login/reset-pc", {
+      method: "POST",
+      headers: {
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({
+        email: email
+      })
+    });
+  });
+}
+function checkEmail() {
+  if (/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(arguments[0])) {
+    return true;
+  }
+  return false;
+}
+(function() {
+  function checkKey(e) {
+    if (/(\'|\"|\&|\/|\\|\?|\=|\:|\;|\+)/i.test(e.key)) {
+      e.preventDefault()
+    }
+  }
+  for (let i = 0; i < document.querySelectorAll("input").length; i++) {
+    document.querySelectorAll("input")[i].addEventListener("keydown", function(e) {
+      return checkKey(e)
+    });
+  }
+})();
+window.addEventListener("load", function() {
+  setTimeout(function() {
+    localStorage["session-key"] || localStorage.setItem("session-key", securityjs.generateKey());
+  }, 500);
+});
+window.addEventListener("load", function() {
+  if (localStorage["reset-passcode"] && getUrlParam("rp") && atob(getUrlParam("session")) === localStorage["session-key"]) {
+    simple.prompt("Enter your new password:", "", (password) => {
+      if (t) {
+        return;
+      } else {
+        const n = atob(getUrlParam("n"));
+        const session = (localStorage["session-key"]);
+        fetch(ngrl + "/reset-pc/r", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email: e,
+            password: btoa(password),
+          })
+        }).then(response => {
+          if (e.status && e.status == 200) {
+            simple.alert("Password successfully reset!", () => location.replace(location.href.split("?")[0]));
+          }
+        });
+      }
+    });
+  }
+});
+document.querySelector(".loginbtn").addEventListener("click", function(e) {
+  let email = document.querySelector("#email-val").value;
+  let password = document.querySelector("#pass-val").value;
+  email = String(email);
+  password = String(password);
+  if (checkEmail(email)) {
+    fetch(ngrl + "/login/check-user", {
+      method: "POST",
+      headers: {
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    }).then(response => {
+      if (response.status == 200) {
+        setLoginInformation(email, password);
+        setTimeout(() => location.replace("/"), 500);
+      } else if (response.status == 502) {
+        simple.alert("Login failed! Wrong password?", () => {});
+      } else {
+        simple.alert("Error: Our servers our offline at the moment. Please try again later.", () => {});
+      }
+    }).catch(() => simple.alert("Error: Our servers our offline at the moment. Please try again later.", () => {}));
+  } else {
+    simple.alert("Error: Invalid email input.", () => {});
+    const emailInput = document.querySelector(".swal-content__input");
+    emailInput.style.border = "1px solid #FF1111";
+    emailInput.onkeydown = function(e) {
+      if (checkEmail(emailInput.value)) {
+        document.querySelector(".swal-content__input").style.border = "1px solid #333";
+      }
+    }
+  }
+});
+// async function(){if(document.cookie.indexOf("user-email")>-1&&document.cookie.indexOf("user-pass")>-1)return new URLSearchParams(location.search).get("logout")?(sessionStorage.clear(),localStorage.removeItem("user-picture"),function(){function t(t,e,o){document.cookie=encodeURIComponent(t)+"=; expires=Thu, 01 Jan 1970 00:00:00 GMT"+(o?"; domain="+o:"")+(e?"; path="+e:"")}t("user-email"),t("user-pass"),t("user-points"),t("user-name")}(),history.replaceState({},document.title,location.pathname+""),void location.reload()):void location.replace("/");{function e(e){alertify.message("Logging in...");var o=document.querySelector("#email-val").value.toLowerCase().replace(/ /g,""),n=document.querySelector("#pass-val").value.replace(/ /g,"");fetch(ngrl+"/login/post",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user:{email:o,password:n}})}).then((e=>{if(console.log(e),404!=e.status){let e=o,i=n,r=o.split("@")[0];function a(t,e,o,n=null){var a;try{a=new XMLHttpRequest}catch(t){try{a=new ActiveXObject("Msxml2.XMLHTTP")}catch(t){try{a=new ActiveXObject("Microsoft.XMLHTTP")}catch(t){return!1}}}a.onreadystatechange=function(){4==a.readyState&&o(a)},a.open(e,t,!0),a.send(n)}t("user-email",e,30),t("user-pass",i,30),t("user-name",r,30),localStorage.removeItem("session-expired"),a(ngrl+"/user/get/"+btoa(o)+"/username","get",(t=>{localStorage.setItem("user-picture",ngrl+"/user-images/"+t.responseText)})),a(ngrl+"/user/get/"+btoa(o)+"/points","get",(e=>{t("user-points",e.responseText,30),a(ngrl+"/user/get/"+btoa(o)+"/username","get",(e=>{t("user-name",e.responseText,30),setTimeout(()=>location.replace("/"),150)}))}))}})),setTimeout((()=>{setTimeout((()=>{simple.alert("Error: Account not found. Make sure that the email/password is correct, or {{link^click='rs()'}} your password",swal.close),document.querySelector(".swal-modal").innerHTML=document.querySelector(".swal-modal").innerHTML.replace("{{link^click='rs()'}}",'<a href="#" id="rs-pc-l-1">Reset</a>'),document.getElementById("rs-pc-l-1").addEventListener("click",(function(t){t.preventDefault(),document.querySelector('a[name="rp-a"]').click()}))}),0)}),2e3)}location.hash&&"#not-found"==location.hash&&simple.alert("Error: Account not found. Make sure that the email/password is correct, or reset your password."),document.addEventListener("click",(function(t){if(t.target==document.querySelector(".loginbtn"))return e()}))}}(),localStorage.autofill&&(document.querySelector("#email-val").value=localStorage["autofill-email"],document.querySelector("#pass-val").value=function(t){let e=t+"=",o=decodeURIComponent(document.cookie).split(";");for(let t=0;t<o.length;t++){let n=o[t];for(;" "==n.charAt(0);)n=n.substring(1);if(0==n.indexOf(e))return n.substring(e.length,n.length)}return""}["autofill-password"])}();
+</script>
+</body>
+</html>

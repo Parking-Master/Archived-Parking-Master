@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>My Account - Parking Master</title>
+      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+      <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+      <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/Parking-Master/Simple-Alert@latest/simplealert.js"></script>
+      <style>
+        html, body, h1, h2, h3, h4, h5, h6 {
+          font-family: "Roboto", sans-serif;
+        }
+        .tooltip {
+          position: relative;
+          display: inline-block;
+        }
+        .tooltip .tooltiptext {
+          visibility: hidden;
+          width: 120px;
+          background-color: black;
+          color: #fff;
+          text-align: center;
+          border-radius: 6px;
+          padding: 5px 0;
+          position: absolute;
+          z-index: 1;
+          top: -5px;
+          left: 110%;
+        }
+        
+        .tooltip .tooltiptext::after {
+          content: "";
+          position: absolute;
+          top: 50%;
+          right: 100%;
+          margin-top: -5px;
+          border-width: 5px;
+          border-style: solid;
+          border-color: transparent black transparent transparent;
+        }
+        .tooltip:hover .tooltiptext {
+          visibility: visible;
+        }
+        #file-system {
+          cursor: pointer;
+          background-color: #f3f3f3;
+          border: 2px solid #333;
+          border-radius: 3px;
+          padding: 3px;
+          font-family: Arial, helvetica, sans-serif;
+        }
+        .swal-button--confirm {
+          color: #555 !important;
+          background-color: #f0f0f0 !important;
+          border: none !important;
+          outline: none;
+          position: relative;
+          left: 45%;
+        }
+        .swal-button-container {
+          position:relative;
+          left:-33%;
+        }
+        .swal-button--confirm:hover {
+          outline: none;
+          box-shadow: none !important;
+          background-color: #e1e1e1 !important;
+        }
+        .swal-button--confirm:active,
+        .swal-button--confirm:focus {
+          outline: none;
+          box-shadow: none !important;
+        }
+        .swal-button--cancel:focus {
+          outline: none;
+          box-shadow: none !important;
+        }
+        .swal-footer {
+          margin-top: 15px;
+          border-top: 1px solid #ababab
+        }
+        .card {
+          width: 115px;
+          height: 115px;
+          padding: 10px 0;
+          background: #fff;
+          border: 2px solid transparent;
+          outline: 2px solid #ddd;
+          border-radius: 3px;
+          margin: 15px;
+          display: inline-table;
+          font-size: 1em;
+          text-align: center;
+          justify-content: center;
+          padding-top: 2.25%;
+        }
+        .card:hover {
+          transform: scale(1.1);
+          cursor: pointer;
+        }
+        .index {
+          margin-top: 10%;
+          margin-left: 22.5%;
+          overflow: hidden;
+          width: 100%;
+          user-select: none !important;
+        }
+        :root {
+          font-weight: 300;
+          font-size: auto;
+          background-color: #f9f9f9;
+        }
+        .main h1 {
+          font-weight: 300;
+          color: #222;
+          font-style: normal;
+          font-size: 2.5rem;
+          text-align: center;
+          margin-top: 4%;
+          margin-bottom: -2%;
+        }
+        .switch {
+          position: relative;
+          display: inline-block;
+          width: 60px;
+          height: 34px;
+        }
+        .switch input { 
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #ccc;
+          -webkit-transition: .4s;
+          transition: .4s;
+          border-radius: 34px;
+        }
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 26px;
+          width: 26px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          -webkit-transition: .4s;
+          transition: .4s;
+          border-radius: 50%;
+        }
+        input:checked + .slider {
+          background-color: #333;
+        }
+        input:focus + .slider {
+          box-shadow: 0 0 1px #2196F3;
+        }
+        input:checked + .slider:before {
+          -webkit-transform: translateX(26px);
+          -ms-transform: translateX(26px);
+          transform: translateX(26px);
+        }
+        .email {
+          color: #2196F3;
+          cursor: pointer;
+        }
+        .email:hover {
+          text-decoration: underline;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="main">
+        <h1>My Account (<span class="username"></span>)</h1>
+        <hr style="margin-top: 5%; margin-bottom: -2.5%;">
+        <div class="index">
+          <div class="card" onclick="editProfile('picture', '0')">Picture</div>
+          <div class="card" onclick="editProfile('username')"">Username</div>
+          <div class="card" onclick="editProfile('email')"">Email</div>
+          <div class="card" onclick="editProfile('info')"">Info</div>
+          <div class="card" onclick="editProfile('about')"">About</div>
+          <div class="card" onclick="location.href = 'https://github.com/Parking-Master/Parking-Master/blob/main/LICENSE.md';">License</div>
+        </div>
+      </div>
+      <script src="/libs/users.js"></script>
+      <script>
+      function encryptMultiplyer(text, layers) {
+        if (layers > 10) {
+          throw new ReferenceError("Cannot encrypt string with more than 10 layers");
+        }
+        let resultText = text;
+        for (let i = 0; i < layers; i++) {
+          if (resultText.length > 400) return console.warn("Warning: Encrypting a string too high can deny system processes, and overwhelm your browser/PC. If you wish to continue and ignore this warning, please change the overEncryptStrings variable to true.")
+          resultText = btoa(resultText).replace(/(\=)/gi, "");
+        }
+        return resultText;
+      }
+      function decryptMultiplyer(text, layers) {
+        if (layers > 10) {
+          throw new ReferenceError("Cannot decrypt string with more than 10 layers");
+        }
+        let resultText = text;
+        for (let i = 0; i < layers; i++) {
+          if (!atob(resultText)) {
+            throw new ReferenceError("Failed to decrypt string on layer " + (10 -i) + " (OverDecrypt Failure)");
+          }
+          resultText = atob(resultText);
+        }
+        return resultText;
+      }
+      String.prototype.replaceInvalidCharacter = function(newstr) {
+        return this.replace(/[ "'\\\[\]\(\).\{\}\$\%\^\&\*\+\=\#\@\!`\~\|\/\/\:;\?\|]/g, newstr);
+      }
+      for (let i = 0; i < document.querySelectorAll(".username").length; i++) {
+        document.querySelectorAll(".username")[i].textContent = decryptMultiplyer(user.get("name"), 5);
+      }
+      let ngrl;
+      setTimeout(async () => {
+        ngrl = "https://parkingmaster.loca.lt";
+      }, 1000);
+      if (location.hash == "#edit-picture") {
+        editProfile("picture");
+      } else {
+        for (var i = 0; i < document.querySelectorAll("div").length; i++) {
+          document.querySelectorAll("div")[i].removeAttribute("hidden");
+        }
+      }
+      function editProfile(type, doClose) {
+        function getCookie(cname) {
+          let name = cname + "=";
+          let ca = document.cookie.split(';');
+          for(let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+            }
+          }
+          return "";
+        }
+        function replaceCookie(cname, value) {
+          if (getCookie(cname)) {
+            document.cookie = `${cname}=${value}`;
+          } else {
+            return;
+          }
+        }
+        if (!doClose) { doClose = "1" }
+        if (type == "picture") {
+          if (!localStorage["user-picture"]) {
+            localStorage.setItem("user-picture", "");
+          }
+          var pic = (localStorage["user-picture"]);
+          var edtTools = document.createElement("div");
+          edtTools.innerHTML = '<label for="file-upload" id="file-system">Upload</label><input accept="image/svg,.svg,image/jpg,.jpg,image/jpeg,.jpeg,image/png,.png" type="file" id="file-upload" name="file-upload" hidden />';
+          swal({
+            icon: pic,
+            content: edtTools,
+            buttons: ['Cancel', 'Done'],
+            closeOnEsc: false,
+            closeOnClickOutside: false
+          }).then((done) => {
+              if (done) {
+                var pic = document.querySelector('.swal-icon').querySelector('img').src;
+                var y = btoa(pic);
+                fetch(ngrl + "/user/modify/post", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                    user: {
+                      email: getCookie("user-email"),
+                      password: getCookie("user-pass")
+                    },
+                    type: "picture",
+                    data: y.toString()
+                  })
+                }).then(data => {
+                  if (data.status != 404) {
+                    setTimeout(function(){ if (doClose == "0") { swal.close(); return; } location.replace('/'); }, 200);
+                  }
+                });
+              } else {
+                if (doClose == "0") {
+                  return swal.close();
+                }
+                location.replace("/");
+              }
+          });
+          document.querySelector(".swal-button.swal-button--confirm").setAttribute("disabled", "");
+          document.querySelector(".swal-icon").style.width = "20%";
+          document.querySelector("input[type=\"file\"]").addEventListener("change", function() {
+          document.querySelector(".swal-button.swal-button--confirm").removeAttribute("disabled");
+            const preview = document.querySelector("img");
+            const file = document.querySelector("input[type=\"file\"]").files[0];
+            const reader = new FileReader();
+            reader.addEventListener("load", function() {
+              if ((reader.result).length >= 5000) {
+                alert("Please upload a file that is lower than 5kB");
+              } else {
+                preview.src = reader.result;
+              }
+            }, false);
+            if (file) {
+              reader.readAsDataURL(file);
+            }
+          });
+        } else if (type == "username") {
+          var edtTools = document.createElement("div");
+          edtTools.innerHTML = '<input style="position: relative; width: 150px; left: 50%; margin-left: -75px; border: 1px solid #333 !important;" type="text" class="swal-content__input" />';
+          swal({
+            content: edtTools,
+            buttons: ["Cancel", "Done"],
+            closeOnEsc: false,
+            closeOnClickOutside: false
+          }).then((done) => {
+            if (done) {
+              fetch(ngrl + "/user/modify/post", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  user: {
+                    email: getCookie("user-email"),
+                    password: getCookie("user-pass")
+                  },
+                  type: "name",
+                  data: document.querySelector(".swal-content__input").value.replaceInvalidCharacter("-")
+                })
+              }).then(data => {
+                if (data.statusText == "OK") {
+                  replaceCookie("user-name", encryptMultiplyer(document.querySelector(".swal-content__input").value.replaceInvalidCharacter("-").substr(0, 14), 5));
+                  localStorage.setItem("user-picture", (localStorage.getItem("user-picture").split("/").splice(0, 4).join("/") + "/") + document.querySelector(".swal-content__input").value.replaceInvalidCharacter("-"));
+                }
+              });
+              for (var i = 0; i < document.querySelectorAll(".username").length; i++) {
+                document.querySelectorAll(".username")[i].textContent = document.querySelector(".swal-content__input").value.replaceInvalidCharacter("-");
+              }
+            } else {
+              swal.close();
+            }
+          });
+            document.querySelector(".swal-modal").querySelector(".swal-button--confirm").disabled = true;
+            document.querySelector(".swal-content__input").value = decryptMultiplyer(user.get('name'), 5);
+            document.querySelector(".swal-content__input").onkeydown = function() {
+            if (document.querySelector("button:disabled")) {
+              document.querySelector("button:disabled").disabled = false;
+            }
+            this.value = this.value.replaceInvalidCharacter("-");
+          };
+        } else if (type == "email") {
+          var edtTools = document.createElement("div");
+          edtTools.innerHTML = '<p class="email" onclick=\'event.preventDefault();location.assign("mailto:' + decryptMultiplyer(user.get("email"), 5) + '")\'><a href="' + decryptMultiplyer(user.get("name"), 5) + '">' + decryptMultiplyer(user.get("email"), 5) + '</a></p>';
+          swal({
+            content: edtTools,
+            button: "OK",
+            closeOnEsc: false,
+            closeOnClickOutside: false
+          }).then(function(done) {
+            swal.close();
+          });
+        }
+      }
+      </script>
+    </body>
+</html>
